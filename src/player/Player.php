@@ -500,11 +500,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 	public function setAutoJump(bool $value) : void{
 		if($this->autoJump !== $value){
 			$this->autoJump = $value;
-			if($this->getNetworkSession()->getProtocolId() >= ProtocolInfo::PROTOCOL_1_19_10){
-				$this->getNetworkSession()->syncAdventureSettings();
-			}else{
-				$this->getNetworkSession()->syncAbilities($this);
-			}
+			$this->getNetworkSession()->syncAbilities($this);
 		}
 	}
 

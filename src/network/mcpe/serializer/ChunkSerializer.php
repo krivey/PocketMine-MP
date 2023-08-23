@@ -24,14 +24,10 @@ declare(strict_types=1);
 namespace pocketmine\network\mcpe\serializer;
 
 use pocketmine\block\tile\Spawnable;
-use pocketmine\block\tile\Tile;
-use pocketmine\block\tile\TileFactory;
 use pocketmine\data\bedrock\BiomeIds;
 use pocketmine\data\bedrock\LegacyBiomeIdToStringIdMap;
-use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\convert\RuntimeBlockMapping;
-use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializer;
 use pocketmine\network\mcpe\protocol\serializer\PacketSerializerContext;
@@ -111,7 +107,7 @@ final class ChunkSerializer{
 	public static function serializeBiomes(Chunk $chunk, PacketSerializer $stream) : void{
 		//TODO: right now we don't support 3D natively, so we just 3Dify our 2D biomes so they fill the column
 		$encodedBiomePalette = self::serializeBiomesAsPalette($chunk);
-		$stream->put(str_repeat($encodedBiomePalette, $stream->getProtocolId() >= ProtocolInfo::PROTOCOL_1_18_30 ? 24 : 25));
+		$stream->put(str_repeat($encodedBiomePalette, 25));
 	}
 
 	public static function serializeBorderBlocks(PacketSerializer $stream) : void {
@@ -163,23 +159,9 @@ final class ChunkSerializer{
 
 	public static function serializeTiles(Chunk $chunk, int $mappingProtocol) : string{
 		$stream = new BinaryStream();
-		$nbtSerializer = new NetworkNbtSerializer();
 		foreach($chunk->getTiles() as $tile){
 			if($tile instanceof Spawnable){
-				if($mappingProtocol === ProtocolInfo::PROTOCOL_1_19_10){
-					//TODO: HACK! we send only the bare essentials to create a tile in the chunk itself, due to a bug in
-					//1.19.10 which causes items in tiles (item frames, lecterns) to not load properly when they are sent in
-					//a chunk via the classic chunk sending mechanism. We workaround this bug by sendingBlockActorDataPacket
-					//in NetworkSession to set the actual tile properties after sending the LevelChunkPacket.
-					$nbt = CompoundTag::create()
-						->setString(Tile::TAG_ID, TileFactory::getInstance()->getSaveId(get_class($tile)))
-						->setInt(Tile::TAG_X, $tile->getPosition()->getFloorX())
-						->setInt(Tile::TAG_Y, $tile->getPosition()->getFloorY())
-						->setInt(Tile::TAG_Z, $tile->getPosition()->getFloorZ());
-					$stream->put($nbtSerializer->write(new TreeRoot($nbt)));
-				}else{
-					$stream->put($tile->getSerializedSpawnCompound($mappingProtocol)->getEncodedNbt());
-				}
+				$stream->put($tile->getSerializedSpawnCompound($mappingProtocol)->getEncodedNbt());
 			}
 		}
 

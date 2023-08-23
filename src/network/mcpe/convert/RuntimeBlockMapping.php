@@ -64,38 +64,6 @@ final class RuntimeBlockMapping{
 			ProtocolInfo::PROTOCOL_1_20_0 => [
 				self::CANONICAL_BLOCK_STATES_PATH => '-1.20.0',
 				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.20.0',
-			],
-			ProtocolInfo::PROTOCOL_1_19_80 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.19.80',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.19.80',
-			],
-			ProtocolInfo::PROTOCOL_1_19_70 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.19.70',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.19.70',
-			],
-			ProtocolInfo::PROTOCOL_1_19_63 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.19.63',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.19.63',
-			],
-			ProtocolInfo::PROTOCOL_1_19_50 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.19.50',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.19.63',
-			],
-			ProtocolInfo::PROTOCOL_1_19_40 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.19.40',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.19.63',
-			],
-			ProtocolInfo::PROTOCOL_1_19_10 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.19.10',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.19.63',
-			],
-			ProtocolInfo::PROTOCOL_1_18_30 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.18.30',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.18.30',
-			],
-			ProtocolInfo::PROTOCOL_1_18_10 => [
-				self::CANONICAL_BLOCK_STATES_PATH => '-1.18.10',
-				self::R12_TO_CURRENT_BLOCK_MAP_PATH => '-1.18.10',
 			]
 		];
 
@@ -151,20 +119,6 @@ final class RuntimeBlockMapping{
 	}
 
 	public static function getMappingProtocol(int $protocolId) : int{
-		if($protocolId === ProtocolInfo::PROTOCOL_1_19_60){
-			return ProtocolInfo::PROTOCOL_1_19_63;
-		}
-
-		if($protocolId < ProtocolInfo::PROTOCOL_1_19_40 && $protocolId >= ProtocolInfo::PROTOCOL_1_19_0){
-			if($protocolId === ProtocolInfo::PROTOCOL_1_19_0){
-				return ProtocolInfo::PROTOCOL_1_19_10;
-			}
-
-			if($protocolId >= ProtocolInfo::PROTOCOL_1_19_20){
-				return ProtocolInfo::PROTOCOL_1_19_40;
-			}
-		}
-
 		return $protocolId;
 	}
 
