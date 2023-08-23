@@ -38,7 +38,6 @@ use pocketmine\world\format\PalettedBlockArray;
 use pocketmine\world\format\SubChunk;
 use function chr;
 use function count;
-use function get_class;
 use function str_repeat;
 
 final class ChunkSerializer{

@@ -170,7 +170,7 @@ class NetworkSession{
 	private \SplQueue $compressedQueue;
 	private bool $forceAsyncCompression = true;
 	private ?int $protocolId = null;
-	private bool $enableCompression = false;
+	private bool $enableCompression = false; //disabled until handshake completed
 
 	private ?InventoryManager $invManager = null;
 
@@ -228,13 +228,11 @@ class NetworkSession{
 			$this,
 			function(PlayerInfo $info) : void{
 				$this->info = $info;
-				$this->logger->info("Player: " . TextFormat::AQUA . $info->getUsername() . TextFormat::RESET);
+				$this->logger->info($this->server->getLanguage()->translate(KnownTranslationFactory::pocketmine_network_session_playerName(TextFormat::AQUA . $info->getUsername() . TextFormat::RESET)));
 				$this->logger->setPrefix($this->getLogPrefix());
 				$this->manager->markLoginReceived($this);
 			},
-			function(bool $isAuthenticated, bool $authRequired, ?string $error, ?string $clientPubKey) : void{
-				$this->setAuthenticationStatus($isAuthenticated, $authRequired, $error, $clientPubKey);
-			}
+			$this->setAuthenticationStatus(...)
 		));
 	}
 
@@ -977,7 +975,6 @@ class NetworkSession{
 		if($this->player === null){
 			throw new \LogicException("Cannot sync adventure settings for a player that is not yet created");
 		}
-
 		//everything except auto jump is handled via UpdateAbilitiesPacket
 		$this->sendDataPacket(UpdateAdventureSettingsPacket::create(
 			noAttackingMobs: false,
