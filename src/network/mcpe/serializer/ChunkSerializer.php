@@ -106,7 +106,7 @@ final class ChunkSerializer{
 	public static function serializeBiomes(Chunk $chunk, PacketSerializer $stream) : void{
 		//TODO: right now we don't support 3D natively, so we just 3Dify our 2D biomes so they fill the column
 		$encodedBiomePalette = self::serializeBiomesAsPalette($chunk);
-		$stream->put(str_repeat($encodedBiomePalette, 25));
+		$stream->put(str_repeat($encodedBiomePalette, 24));
 	}
 
 	public static function serializeBorderBlocks(PacketSerializer $stream) : void {
