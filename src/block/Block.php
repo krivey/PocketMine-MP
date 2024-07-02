@@ -81,7 +81,7 @@ class Block{
 	private int $requiredBlockItemStateDataBits;
 	private int $requiredBlockOnlyStateDataBits;
 
-	private Block $defaultState;
+	public Block $defaultState;
 
 	private int $stateIdXorMask;
 
@@ -225,7 +225,7 @@ class Block{
 		return new ItemBlock($normalized);
 	}
 
-	private function decodeBlockItemState(int $data) : void{
+	public function decodeBlockItemState(int $data) : void{
 		$reader = new RuntimeDataReader($this->requiredBlockItemStateDataBits, $data);
 
 		$this->describeBlockItemState($reader);
@@ -245,7 +245,7 @@ class Block{
 		}
 	}
 
-	private function encodeBlockItemState() : int{
+	public function encodeBlockItemState() : int{
 		$writer = new RuntimeDataWriter($this->requiredBlockItemStateDataBits);
 
 		$this->describeBlockItemState($writer);
