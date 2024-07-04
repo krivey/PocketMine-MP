@@ -353,7 +353,7 @@ class World implements ChunkManager{
 	 */
 	private array $generatorRegisteredWorkers = [];
 
-	private bool $autoSave = true;
+	private bool $autoSave = false;
 
 	private int $sleepTicks = 0;
 
@@ -663,7 +663,7 @@ class World implements ChunkManager{
 			}
 		}
 
-		$this->save();
+//		$this->save();
 
 		$this->unregisterGenerator();
 
