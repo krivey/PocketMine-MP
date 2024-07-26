@@ -1492,40 +1492,42 @@ class World implements ChunkManager{
 
 	public function save(bool $force = false) : bool{
 
-		if(!$this->getAutoSave() && !$force){
-			return false;
-		}
+		return false;
 
-		(new WorldSaveEvent($this))->call();
-
-		$timings = $this->timings->syncDataSave;
-		$timings->startTiming();
-
-		$this->provider->getWorldData()->setTime($this->time);
-		$this->saveChunks();
-		$this->provider->getWorldData()->save();
-
-		$timings->stopTiming();
-
-		return true;
+//		if(!$this->getAutoSave() && !$force){
+//			return false;
+//		}
+//
+//		(new WorldSaveEvent($this))->call();
+//
+//		$timings = $this->timings->syncDataSave;
+//		$timings->startTiming();
+//
+//		$this->provider->getWorldData()->setTime($this->time);
+//		$this->saveChunks();
+//		$this->provider->getWorldData()->save();
+//
+//		$timings->stopTiming();
+//
+//		return true;
 	}
 
 	public function saveChunks() : void{
-		$this->timings->syncChunkSave->startTiming();
-		try{
-			foreach($this->chunks as $chunkHash => $chunk){
-				self::getXZ($chunkHash, $chunkX, $chunkZ);
-				$this->provider->saveChunk($chunkX, $chunkZ, new ChunkData(
-					$chunk->getSubChunks(),
-					$chunk->isPopulated(),
-					array_map(fn(Entity $e) => $e->saveNBT(), array_filter($this->getChunkEntities($chunkX, $chunkZ), fn(Entity $e) => $e->canSaveWithChunk())),
-					array_map(fn(Tile $t) => $t->saveNBT(), $chunk->getTiles()),
-				), $chunk->getTerrainDirtyFlags());
-				$chunk->clearTerrainDirtyFlags();
-			}
-		}finally{
-			$this->timings->syncChunkSave->stopTiming();
-		}
+//		$this->timings->syncChunkSave->startTiming();
+//		try{
+//			foreach($this->chunks as $chunkHash => $chunk){
+//				self::getXZ($chunkHash, $chunkX, $chunkZ);
+//				$this->provider->saveChunk($chunkX, $chunkZ, new ChunkData(
+//					$chunk->getSubChunks(),
+//					$chunk->isPopulated(),
+//					array_map(fn(Entity $e) => $e->saveNBT(), array_filter($this->getChunkEntities($chunkX, $chunkZ), fn(Entity $e) => $e->canSaveWithChunk())),
+//					array_map(fn(Tile $t) => $t->saveNBT(), $chunk->getTiles()),
+//				), $chunk->getTerrainDirtyFlags());
+//				$chunk->clearTerrainDirtyFlags();
+//			}
+//		}finally{
+//			$this->timings->syncChunkSave->stopTiming();
+//		}
 	}
 
 	/**
