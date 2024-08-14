@@ -3050,79 +3050,79 @@ class World implements ChunkManager{
 	}
 
 	public function unloadChunk(int $x, int $z, bool $safe = true, bool $trySave = true) : bool{
-//		if($safe && $this->isChunkInUse($x, $z)){
-//			return false;
-//		}
-//
-//		if(!$this->isChunkLoaded($x, $z)){
-//			return true;
-//		}
-//
-//		$this->timings->doChunkUnload->startTiming();
-//
-//		$chunkHash = World::chunkHash($x, $z);
-//
-//		$chunk = $this->chunks[$chunkHash] ?? null;
-//
-//		if($chunk !== null){
-//			if(ChunkUnloadEvent::hasHandlers()){
-//				$ev = new ChunkUnloadEvent($this, $x, $z, $chunk);
-//				$ev->call();
-//				if($ev->isCancelled()){
-//					$this->timings->doChunkUnload->stopTiming();
-//
-//					return false;
-//				}
-//			}
-//
-//			if($trySave && $this->getAutoSave()){
-//				$this->timings->syncChunkSave->startTiming();
-//				try{
-//					$this->provider->saveChunk($x, $z, new ChunkData(
-//						$chunk->getSubChunks(),
-//						$chunk->isPopulated(),
-//						array_map(fn(Entity $e) => $e->saveNBT(), array_filter($this->getChunkEntities($x, $z), fn(Entity $e) => $e->canSaveWithChunk())),
-//						array_map(fn(Tile $t) => $t->saveNBT(), $chunk->getTiles()),
-//					), $chunk->getTerrainDirtyFlags());
-//				}finally{
-//					$this->timings->syncChunkSave->stopTiming();
-//				}
-//			}
-//
-//			foreach($this->getChunkListeners($x, $z) as $listener){
-//				$listener->onChunkUnloaded($x, $z, $chunk);
-//			}
-//
-//			foreach($this->getChunkEntities($x, $z) as $entity){
-//				if($entity instanceof Player){
-//					continue;
-//				}
-//				$entity->close();
-//			}
-//
-//			$chunk->onUnload();
-//		}
-//
-//		unset($this->chunks[$chunkHash]);
-//		unset($this->blockCache[$chunkHash]);
-//		unset($this->blockCollisionBoxCache[$chunkHash]);
-//		unset($this->changedBlocks[$chunkHash]);
-//		unset($this->registeredTickingChunks[$chunkHash]);
-//		$this->markTickingChunkForRecheck($x, $z);
-//
-//		if(array_key_exists($chunkHash, $this->chunkPopulationRequestMap)){
-//			$this->logger->debug("Rejecting population promise for chunk $x $z");
-//			$this->chunkPopulationRequestMap[$chunkHash]->reject();
-//			unset($this->chunkPopulationRequestMap[$chunkHash]);
-//			if(isset($this->activeChunkPopulationTasks[$chunkHash])){
-//				$this->logger->debug("Marking population task for chunk $x $z as orphaned");
-//				$this->activeChunkPopulationTasks[$chunkHash] = false;
-//			}
-//		}
-//
-//		$this->timings->doChunkUnload->stopTiming();
+		if($safe && $this->isChunkInUse($x, $z)){
+			return false;
+		}
 
-		return false;
+		if(!$this->isChunkLoaded($x, $z)){
+			return true;
+		}
+
+		$this->timings->doChunkUnload->startTiming();
+
+		$chunkHash = World::chunkHash($x, $z);
+
+		$chunk = $this->chunks[$chunkHash] ?? null;
+
+		if($chunk !== null){
+			if(ChunkUnloadEvent::hasHandlers()){
+				$ev = new ChunkUnloadEvent($this, $x, $z, $chunk);
+				$ev->call();
+				if($ev->isCancelled()){
+					$this->timings->doChunkUnload->stopTiming();
+
+					return false;
+				}
+			}
+
+			if($trySave && $this->getAutoSave()){
+				$this->timings->syncChunkSave->startTiming();
+				try{
+					$this->provider->saveChunk($x, $z, new ChunkData(
+						$chunk->getSubChunks(),
+						$chunk->isPopulated(),
+						array_map(fn(Entity $e) => $e->saveNBT(), array_filter($this->getChunkEntities($x, $z), fn(Entity $e) => $e->canSaveWithChunk())),
+						array_map(fn(Tile $t) => $t->saveNBT(), $chunk->getTiles()),
+					), $chunk->getTerrainDirtyFlags());
+				}finally{
+					$this->timings->syncChunkSave->stopTiming();
+				}
+			}
+
+			foreach($this->getChunkListeners($x, $z) as $listener){
+				$listener->onChunkUnloaded($x, $z, $chunk);
+			}
+
+			foreach($this->getChunkEntities($x, $z) as $entity){
+				if($entity instanceof Player){
+					continue;
+				}
+				$entity->close();
+			}
+
+			$chunk->onUnload();
+		}
+
+		unset($this->chunks[$chunkHash]);
+		unset($this->blockCache[$chunkHash]);
+		unset($this->blockCollisionBoxCache[$chunkHash]);
+		unset($this->changedBlocks[$chunkHash]);
+		unset($this->registeredTickingChunks[$chunkHash]);
+		$this->markTickingChunkForRecheck($x, $z);
+
+		if(array_key_exists($chunkHash, $this->chunkPopulationRequestMap)){
+			$this->logger->debug("Rejecting population promise for chunk $x $z");
+			$this->chunkPopulationRequestMap[$chunkHash]->reject();
+			unset($this->chunkPopulationRequestMap[$chunkHash]);
+			if(isset($this->activeChunkPopulationTasks[$chunkHash])){
+				$this->logger->debug("Marking population task for chunk $x $z as orphaned");
+				$this->activeChunkPopulationTasks[$chunkHash] = false;
+			}
+		}
+
+		$this->timings->doChunkUnload->stopTiming();
+
+		return true;
 	}
 
 	/**
@@ -3596,26 +3596,26 @@ class World implements ChunkManager{
 	}
 
 	public function unloadChunks(bool $force = false) : void{
-//		if(count($this->unloadQueue) > 0){
-//			$maxUnload = 96;
-//			$now = microtime(true);
-//			foreach($this->unloadQueue as $index => $time){
-//				World::getXZ($index, $X, $Z);
-//
-//				if(!$force){
-//					if($maxUnload <= 0){
-//						break;
-//					}elseif($time > ($now - 30)){
-//						continue;
-//					}
-//				}
-//
-//				//If the chunk can't be unloaded, it stays on the queue
-//				if($this->unloadChunk($X, $Z, true)){
-//					unset($this->unloadQueue[$index]);
-//					--$maxUnload;
-//				}
-//			}
-//		}
+		if(count($this->unloadQueue) > 0){
+			$maxUnload = 96;
+			$now = microtime(true);
+			foreach($this->unloadQueue as $index => $time){
+				World::getXZ($index, $X, $Z);
+
+				if(!$force){
+					if($maxUnload <= 0){
+						break;
+					}elseif($time > ($now - 30)){
+						continue;
+					}
+				}
+
+				//If the chunk can't be unloaded, it stays on the queue
+				if($this->unloadChunk($X, $Z, true)){
+					unset($this->unloadQueue[$index]);
+					--$maxUnload;
+				}
+			}
+		}
 	}
 }
