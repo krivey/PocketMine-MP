@@ -511,7 +511,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer{
 	public function setAutoJump(bool $value) : void{
 		if($this->autoJump !== $value){
 			$this->autoJump = $value;
-			$this->getNetworkSession()->syncAbilities($this);
+			$this->getNetworkSession()->syncAdventureSettings();
 		}
 	}
 
