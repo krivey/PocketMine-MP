@@ -36,6 +36,7 @@ use pocketmine\world\World;
 use function count;
 use function is_string;
 use function spl_object_id;
+use function strlen;
 
 /**
  * This class is used by the current MCPE protocol system to store cached chunk packets for fast resending.
@@ -102,12 +103,7 @@ class ChunkCache implements ChunkListener{
 		if($chunk === null){
 			throw new \InvalidArgumentException("Cannot request an unloaded chunk");
 		}
-		$protocolId = $typeConverter->getProtocolId();
-
-		if(isset($this->caches[$chunkHash][$protocolId])){
-			++$this->hits;
-			return $this->caches[$chunkHash][$protocolId];
-		}
+		++$this->misses;
 
 		$this->world->timings->syncChunkSendPrepare->startTiming();
 		try{
@@ -124,7 +120,7 @@ class ChunkCache implements ChunkListener{
 					$this->compressor
 				)
 			);
-			$this->caches[$chunkHash][$protocolId] = $promise;
+			$this->caches[$chunkHash][$protocolId = $typeConverter->getProtocolId()] = $promise;
 			$promise->onResolve(function(CompressBatchPromise $promise) use ($chunkHash, $protocolId) : void{
 				//the promise may have been discarded or replaced if the chunk was unloaded or modified in the meantime
 				if(($this->caches[$chunkHash][$protocolId] ?? null) === $promise){

@@ -21,24 +21,13 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\block;
+namespace pocketmine\world\sound;
 
-use pocketmine\block\utils\StaticSupportTrait;
-use pocketmine\math\AxisAlignedBB;
-use pocketmine\math\Facing;
+abstract class ProtocolSound implements Sound{
 
-class MossCarpet extends Flowable{
-	use StaticSupportTrait;
+	protected int $protocolId;
 
-	public function isSolid() : bool{
-		return true;
-	}
-
-	protected function recalculateCollisionBoxes() : array{
-		return [AxisAlignedBB::one()->trim(Facing::UP, 15 / 16)];
-	}
-
-	private function canBeSupportedAt(Block $block) : bool{
-		return $block->getSide(Facing::DOWN)->getTypeId() !== BlockTypeIds::AIR;
+	public function setProtocolId(int $protocolId) : void{
+		$this->protocolId = $protocolId;
 	}
 }
