@@ -49,19 +49,17 @@ use function is_array;
 /**
  * Handles the initial login phase of the session. This handler is used as the initial state.
  */
-class LoginPacketHandler extends ChunkRequestPacketHandler{
+class LoginPacketHandler extends PacketHandler{
 	/**
 	 * @phpstan-param \Closure(PlayerInfo) : void $playerInfoConsumer
 	 * @phpstan-param \Closure(bool $isAuthenticated, bool $authRequired, Translatable|string|null $error, ?string $clientPubKey) : void $authCallback
 	 */
 	public function __construct(
 		private Server $server,
-		NetworkSession $session,
+		private NetworkSession $session,
 		private \Closure $playerInfoConsumer,
 		private \Closure $authCallback
-	){
-		parent::__construct($session);
-	}
+	){}
 
 	public function handleLogin(LoginPacket $packet) : bool{
 		$protocolVersion = $packet->protocol;
@@ -161,7 +159,7 @@ class LoginPacketHandler extends ChunkRequestPacketHandler{
 	protected function fetchAuthData(JwtChain $chain) : AuthenticationData{
 		/** @var AuthenticationData|null $extraData */
 		$extraData = null;
-		foreach($chain->chain as $k => $jwt){
+		foreach($chain->chain as $jwt){
 			//validate every chain element
 			try{
 				[, $claims, ] = JwtUtils::parse($jwt);

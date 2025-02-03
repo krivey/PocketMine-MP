@@ -37,6 +37,7 @@ use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackInfoEntry;
 use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackStackEntry;
 use pocketmine\network\mcpe\protocol\types\resourcepacks\ResourcePackType;
 use pocketmine\resourcepacks\ResourcePack;
+use Ramsey\Uuid\Uuid;
 use function array_keys;
 use function array_map;
 use function ceil;
@@ -50,7 +51,7 @@ use function substr;
  * Handler used for the resource packs sequence phase of the session. This handler takes care of downloading resource
  * packs to the client.
  */
-class ResourcePacksPacketHandler extends ChunkRequestPacketHandler{
+class ResourcePacksPacketHandler extends PacketHandler{
 	private const PACK_CHUNK_SIZE = 256 * 1024; //256KB
 
 	/**
@@ -88,8 +89,6 @@ class ResourcePacksPacketHandler extends ChunkRequestPacketHandler{
 		private bool $mustAccept,
 		private \Closure $completionCallback
 	){
-		parent::__construct($session);
-
 		$this->requestQueue = new \SplQueue();
 		foreach($resourcePackStack as $pack){
 			$this->resourcePacksById[$pack->getPackId()] = $pack;
@@ -105,7 +104,7 @@ class ResourcePacksPacketHandler extends ChunkRequestPacketHandler{
 			//TODO: more stuff
 
 			return new ResourcePackInfoEntry(
-				$pack->getPackId(),
+				Uuid::fromString($pack->getPackId()),
 				$pack->getPackVersion(),
 				$pack->getPackSize(),
 				$this->encryptionKeys[$pack->getPackId()] ?? "",
@@ -122,7 +121,9 @@ class ResourcePacksPacketHandler extends ChunkRequestPacketHandler{
 			hasAddons: false,
 			hasScripts: false,
 			forceServerPacks: false,
-			cdnUrls: []
+			cdnUrls: [],
+			worldTemplateId: Uuid::fromString(Uuid::NIL),
+			worldTemplateVersion: ""
 		));
 		$this->session->getLogger()->debug("Waiting for client to accept resource packs");
 	}

@@ -112,12 +112,12 @@ class CraftingManager{
 	 * @param Item[] $items
 	 *
 	 * @return Item[]
+	 * @phpstan-return list<Item>
 	 */
 	private static function pack(array $items) : array{
-		/** @var Item[] $result */
 		$result = [];
 
-		foreach($items as $i => $item){
+		foreach($items as $item){
 			foreach($result as $otherItem){
 				if($item->canStackWith($otherItem)){
 					$otherItem->setCount($otherItem->getCount() + $item->getCount());
