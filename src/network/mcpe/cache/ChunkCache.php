@@ -92,9 +92,13 @@ class ChunkCache implements ChunkListener{
 	private int $hits = 0;
 	private int $misses = 0;
 
+	/**
+	 * @phpstan-param DimensionIds::* $dimensionId
+	 */
 	private function __construct(
 		private World $world,
-		private Compressor $compressor
+		private Compressor $compressor,
+		private int $dimensionId = DimensionIds::OVERWORLD
 	){}
 
 	private function prepareChunkAsync(int $chunkX, int $chunkZ, int $chunkHash, TypeConverter $typeConverter) : CompressBatchPromise{
@@ -113,7 +117,7 @@ class ChunkCache implements ChunkListener{
 				new ChunkRequestTask(
 					$chunkX,
 					$chunkZ,
-					DimensionIds::OVERWORLD, //TODO: not hardcode this
+					$this->dimensionId,
 					$chunk,
 					$typeConverter,
 					$promise,
