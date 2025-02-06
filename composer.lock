@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ddcce2cd4c9a4217df3c101cc1183722",
+    "content-hash": "04765e418676269f68d0b7753cf29fd2",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -156,12 +156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NetherGamesMC/BedrockProtocol.git",
-                "reference": "3ad8e20283052d09d25b41f6bbc208af33c3a372"
+                "reference": "15f491ae7c68718e9cece30f444405f36d0efa10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NetherGamesMC/BedrockProtocol/zipball/3ad8e20283052d09d25b41f6bbc208af33c3a372",
-                "reference": "3ad8e20283052d09d25b41f6bbc208af33c3a372",
+                "url": "https://api.github.com/repos/NetherGamesMC/BedrockProtocol/zipball/15f491ae7c68718e9cece30f444405f36d0efa10",
+                "reference": "15f491ae7c68718e9cece30f444405f36d0efa10",
                 "shasum": ""
             },
             "require": {
@@ -174,10 +174,10 @@
                 "ramsey/uuid": "^4.1"
             },
             "require-dev": {
-                "phpstan/phpstan": "1.11.9",
-                "phpstan/phpstan-phpunit": "^1.0.0",
-                "phpstan/phpstan-strict-rules": "^1.0.0",
-                "phpunit/phpunit": "^9.5 || ^10.0"
+                "phpstan/phpstan": "2.1.0",
+                "phpstan/phpstan-phpunit": "^2.0.0",
+                "phpstan/phpstan-strict-rules": "^2.0.0",
+                "phpunit/phpunit": "^9.5 || ^10.0 || ^11.0"
             },
             "default-branch": true,
             "type": "library",
@@ -203,7 +203,7 @@
             "support": {
                 "source": "https://github.com/NetherGamesMC/BedrockProtocol/tree/master"
             },
-            "time": "2024-12-24T12:23:44+00:00"
+            "time": "2025-02-06T18:10:57+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
