@@ -35,6 +35,8 @@ use pocketmine\utils\Filesystem;
 use pocketmine\utils\ObjectSet;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\utils\Utils;
+use function array_map;
+use function count;
 use function json_decode;
 
 final class CreativeInventory{
