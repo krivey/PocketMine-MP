@@ -269,12 +269,16 @@ class ParserPacketHandler extends PacketHandler{
 		$this->itemTypeDictionary = new ItemTypeDictionary($packet->getEntries());
 
 		echo "updating legacy item ID mapping table\n";
+		$emptyNBT = new CompoundTag();
 		$table = [];
 		foreach($packet->getEntries() as $entry){
+			$componentNBT = $entry->getComponentNbt()->getRoot();
+
 			$table[$entry->getStringId()] = [
 				"runtime_id" => $entry->getNumericId(),
 				"component_based" => $entry->isComponentBased(),
 				"version" => $entry->getVersion(),
+				"nbt" => $componentNBT->equals($emptyNBT) ? null : base64_encode((new LittleEndianNbtSerializer())->write(new TreeRoot($componentNBT)))
 			];
 		}
 		ksort($table, SORT_STRING);
