@@ -51,7 +51,7 @@ final class ItemTypeDictionaryFromDataHelper{
 
 		$params = [];
 		foreach(Utils::promoteKeys($table) as $name => $entry){
-			if(!is_array($entry) || !is_string($name) || !isset($entry["component_based"], $entry["runtime_id"], $entry["version"]) || !array_key_exists("nbt", $entry)|| !is_bool($entry["component_based"]) || !is_int($entry["runtime_id"]) || !is_int($entry["version"]) || !(is_string($nbt = $entry["nbt"]) || $nbt === null)){
+			if(!is_array($entry) || !is_string($name) || !isset($entry["component_based"], $entry["runtime_id"], $entry["version"]) || !array_key_exists("nbt", $entry) || !is_bool($entry["component_based"]) || !is_int($entry["runtime_id"]) || !is_int($entry["version"]) || !(is_string($nbt = $entry["nbt"]) || $nbt === null)){
 				throw new AssumptionFailedError("Invalid item list format");
 			}
 			$params[] = new ItemTypeEntry($name, $entry["runtime_id"], $entry["component_based"], $entry["version"], $nbt === null ? $emptyNBT : new CacheableNbt($nbtSerializer->read(base64_decode($nbt))->mustGetCompoundTag()));
