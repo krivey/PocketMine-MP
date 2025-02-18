@@ -1627,18 +1627,13 @@ class World implements ChunkManager{
 
 		$collides = [];
 
-		$collisionInfo = $this->blockStateRegistry->collisionInfo;
 		if($targetFirst){
 			for($z = $minZ; $z <= $maxZ; ++$z){
 				for($x = $minX; $x <= $maxX; ++$x){
 					for($y = $minY; $y <= $maxY; ++$y){
-						$stateCollisionInfo = $this->getBlockCollisionInfo($x, $y, $z, $collisionInfo);
-						if(match($stateCollisionInfo){
-							RuntimeBlockStateRegistry::COLLISION_CUBE => true,
-							RuntimeBlockStateRegistry::COLLISION_NONE => false,
-							default => $this->getBlockAt($x, $y, $z)->collidesWithBB($bb)
-						}){
-							return [$this->getBlockAt($x, $y, $z)];
+						$block = $this->getBlockAt($x, $y, $z);
+						if($block->collidesWithBB($bb)){
+							return [$block];
 						}
 					}
 				}
@@ -1647,13 +1642,9 @@ class World implements ChunkManager{
 			for($z = $minZ; $z <= $maxZ; ++$z){
 				for($x = $minX; $x <= $maxX; ++$x){
 					for($y = $minY; $y <= $maxY; ++$y){
-						$stateCollisionInfo = $this->getBlockCollisionInfo($x, $y, $z, $collisionInfo);
-						if(match($stateCollisionInfo){
-							RuntimeBlockStateRegistry::COLLISION_CUBE => true,
-							RuntimeBlockStateRegistry::COLLISION_NONE => false,
-							default => $this->getBlockAt($x, $y, $z)->collidesWithBB($bb)
-						}){
-							$collides[] = $this->getBlockAt($x, $y, $z);
+						$block = $this->getBlockAt($x, $y, $z);
+						if($block->collidesWithBB($bb)){
+							$collides[] = $block;
 						}
 					}
 				}
@@ -1696,31 +1687,15 @@ class World implements ChunkManager{
 	 * @return AxisAlignedBB[]
 	 * @phpstan-return list<AxisAlignedBB>
 	 */
-	private function getBlockCollisionBoxesForCell(int $x, int $y, int $z, array $collisionInfo) : array{
-		$stateCollisionInfo = $this->getBlockCollisionInfo($x, $y, $z, $collisionInfo);
-		$boxes = match($stateCollisionInfo){
-			RuntimeBlockStateRegistry::COLLISION_NONE => [],
-			RuntimeBlockStateRegistry::COLLISION_CUBE => [AxisAlignedBB::one()->offset($x, $y, $z)],
-			default => $this->getBlockAt($x, $y, $z)->getCollisionBoxes()
-		};
-
-		//overlapping AABBs can't make any difference if this is a cube, so we can save some CPU cycles in this common case
-		if($stateCollisionInfo !== RuntimeBlockStateRegistry::COLLISION_CUBE){
-			$cellBB = null;
-			foreach(Facing::OFFSET as [$dx, $dy, $dz]){
-				$offsetX = $x + $dx;
-				$offsetY = $y + $dy;
-				$offsetZ = $z + $dz;
-				$stateCollisionInfo = $this->getBlockCollisionInfo($offsetX, $offsetY, $offsetZ, $collisionInfo);
-				if($stateCollisionInfo === RuntimeBlockStateRegistry::COLLISION_MAY_OVERFLOW){
-					//avoid allocating this unless it's needed
-					$cellBB ??= AxisAlignedBB::one()->offset($x, $y, $z);
-					$extraBoxes = $this->getBlockAt($offsetX, $offsetY, $offsetZ)->getCollisionBoxes();
-					foreach($extraBoxes as $extraBox){
-						if($extraBox->intersectsWith($cellBB)){
-							$boxes[] = $extraBox;
-						}
-					}
+	private function getBlockCollisionBoxesForCell(int $x, int $y, int $z) : array{
+		$block = $this->getBlockAt($x, $y, $z);
+		$boxes = $block->getCollisionBoxes();
+		$cellBB = AxisAlignedBB::one()->offset($x, $y, $z);
+		foreach(Facing::OFFSET as [$dx, $dy, $dz]){
+			$extraBoxes = $this->getBlockAt($x + $dx, $y + $dy, $z + $dz)->getCollisionBoxes();
+			foreach($extraBoxes as $extraBox){
+				if($extraBox->intersectsWith($cellBB)){
+					$boxes[] = $extraBox;
 				}
 			}
 		}
@@ -1750,7 +1725,7 @@ class World implements ChunkManager{
 				for($y = $minY; $y <= $maxY; ++$y){
 					$relativeBlockHash = World::chunkBlockHash($x, $y, $z);
 
-					$boxes = $this->blockCollisionBoxCache[$chunkPosHash][$relativeBlockHash] ??= $this->getBlockCollisionBoxesForCell($x, $y, $z, $collisionInfo);
+					$boxes = $this->blockCollisionBoxCache[$chunkPosHash][$relativeBlockHash] ??= $this->getBlockCollisionBoxesForCell($x, $y, $z);
 
 					foreach($boxes as $blockBB){
 						if($blockBB->intersectsWith($bb)){

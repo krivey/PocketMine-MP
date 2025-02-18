@@ -189,8 +189,6 @@ class RuntimeBlockStateRegistry{
 			if($block->blocksDirectSkyLight()){
 				$this->blocksDirectSkyLight[$index] = true;
 			}
-
-			$this->collisionInfo[$index] = self::calculateCollisionInfo($block);
 		}
 	}
 
