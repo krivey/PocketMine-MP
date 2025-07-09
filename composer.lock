@@ -131,12 +131,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NetherGamesMC/BedrockData.git",
-                "reference": "0c791984f0f7a90ad7b9ccd9b25001609f63a930"
+                "reference": "a48136f93e088bde82fa107dfd9ea4d51c9f18a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NetherGamesMC/BedrockData/zipball/0c791984f0f7a90ad7b9ccd9b25001609f63a930",
-                "reference": "0c791984f0f7a90ad7b9ccd9b25001609f63a930",
+                "url": "https://api.github.com/repos/NetherGamesMC/BedrockData/zipball/a48136f93e088bde82fa107dfd9ea4d51c9f18a5",
+                "reference": "a48136f93e088bde82fa107dfd9ea4d51c9f18a5",
                 "shasum": ""
             },
             "default-branch": true,
@@ -148,7 +148,7 @@
             "support": {
                 "source": "https://github.com/NetherGamesMC/BedrockData/tree/master"
             },
-            "time": "2025-06-18T14:22:53+00:00"
+            "time": "2025-07-08T22:30:43+00:00"
         },
         {
             "name": "nethergamesmc/bedrock-protocol",
@@ -156,12 +156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NetherGamesMC/BedrockProtocol.git",
-                "reference": "66b4e363bc0438dc8fd379f68493a4637ad10a5f"
+                "reference": "379d273ff380c9b2c491821a1e0fcb1ddc19625a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NetherGamesMC/BedrockProtocol/zipball/66b4e363bc0438dc8fd379f68493a4637ad10a5f",
-                "reference": "66b4e363bc0438dc8fd379f68493a4637ad10a5f",
+                "url": "https://api.github.com/repos/NetherGamesMC/BedrockProtocol/zipball/379d273ff380c9b2c491821a1e0fcb1ddc19625a",
+                "reference": "379d273ff380c9b2c491821a1e0fcb1ddc19625a",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
             "support": {
                 "source": "https://github.com/NetherGamesMC/BedrockProtocol/tree/master"
             },
-            "time": "2025-06-18T14:35:05+00:00"
+            "time": "2025-07-08T22:27:46+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
@@ -1689,16 +1689,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.46",
+            "version": "10.5.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8080be387a5be380dda48c6f41cee4a13aadab3d"
+                "reference": "3637b3e50d32ab3a0d1a33b3b6177169ec3d95a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8080be387a5be380dda48c6f41cee4a13aadab3d",
-                "reference": "8080be387a5be380dda48c6f41cee4a13aadab3d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3637b3e50d32ab3a0d1a33b3b6177169ec3d95a3",
+                "reference": "3637b3e50d32ab3a0d1a33b3b6177169ec3d95a3",
                 "shasum": ""
             },
             "require": {
@@ -1770,7 +1770,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.46"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.47"
             },
             "funding": [
                 {
@@ -1794,7 +1794,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-05-02T06:46:24+00:00"
+            "time": "2025-06-20T11:29:11+00:00"
         },
         {
             "name": "sebastian/cli-parser",
