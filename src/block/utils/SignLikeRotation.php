@@ -21,11 +21,19 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\inventory\data;
+namespace pocketmine\block\utils;
 
-use pocketmine\item\Item;
+interface SignLikeRotation{
 
-final class CreativeGroupedItem{
-	public Item $item;
-	public int $groupId;
+	/**
+	 * @return int between 0 and 15
+	 */
+	public function getRotation() : int;
+
+	/**
+	 * @param int $rotation between 0 and 15
+	 *
+	 * @return $this
+	 */
+	public function setRotation(int $rotation) : self;
 }

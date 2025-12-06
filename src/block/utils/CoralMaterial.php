@@ -21,20 +21,21 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\event\server;
+namespace pocketmine\block\utils;
 
-use pocketmine\network\mcpe\convert\TypeConverter;
+interface CoralMaterial{
 
-/**
- * Called when a new type converter is constructed.
- */
-class TypeConverterConstructEvent extends ServerEvent{
+	public function getCoralType() : CoralType;
 
-	public function __construct(
-		private TypeConverter $converter,
-	){}
+	/**
+	 * @return $this
+	 */
+	public function setCoralType(CoralType $coralType) : self;
 
-	public function getConverter() : TypeConverter{
-		return $this->converter;
-	}
+	public function isDead() : bool;
+
+	/**
+	 * @return $this
+	 */
+	public function setDead(bool $dead) : self;
 }

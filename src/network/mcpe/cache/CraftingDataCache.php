@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\cache;
 
+use pmmp\encoding\BE;
 use pocketmine\crafting\CraftingManager;
 use pocketmine\crafting\FurnaceType;
 use pocketmine\crafting\ShapedRecipe;
@@ -43,7 +44,6 @@ use pocketmine\network\mcpe\protocol\types\recipe\ShapedRecipe as ProtocolShaped
 use pocketmine\network\mcpe\protocol\types\recipe\ShapelessRecipe as ProtocolShapelessRecipe;
 use pocketmine\timings\Timings;
 use pocketmine\utils\AssumptionFailedError;
-use pocketmine\utils\Binary;
 use pocketmine\utils\ProtocolSingletonTrait;
 use Ramsey\Uuid\Uuid;
 use function array_map;
@@ -57,6 +57,12 @@ final class CraftingDataCache{
 	 * @phpstan-var array<int, CraftingDataPacket>
 	 */
 	private array $caches = [];
+
+	/**
+	 * The client doesn't like recipes with ID 0 (as of 1.21.100) and complains about them in the content log
+	 * This doesn't actually affect the function of the recipe, but it is annoying, so this offset fixes it
+	 */
+	public const RECIPE_ID_OFFSET = 1;
 
 	public function getCache(CraftingManager $manager) : CraftingDataPacket{
 		$id = spl_object_id($manager);
@@ -85,6 +91,8 @@ final class CraftingDataCache{
 
 		$noUnlockingRequirement = new RecipeUnlockingRequirement(null);
 		foreach($manager->getCraftingRecipeIndex() as $index => $recipe){
+			//the client doesn't like recipes with an ID of 0, so we need to offset them
+			$recipeNetId = $index + self::RECIPE_ID_OFFSET;
 			if($recipe instanceof ShapelessRecipe){
 				$typeTag = match($recipe->getType()){
 					ShapelessRecipeType::CRAFTING => CraftingRecipeBlockName::CRAFTING_TABLE,
@@ -96,14 +104,14 @@ final class CraftingDataCache{
 					try{
 						$recipesWithTypeIds[] = new ProtocolShapelessRecipe(
 							CraftingDataPacket::ENTRY_SHAPELESS,
-							Binary::writeInt($index),
+							BE::packUnsignedInt($recipeNetId), //TODO: this should probably be changed to something human-readable
 							array_map($converter->coreRecipeIngredientToNet(...), $r->getIngredientList()),
 							array_map($converter->coreItemStackToNet(...), $r->getResults()),
 							$nullUUID,
 							$typeTag,
 							50,
 							$noUnlockingRequirement,
-							$index
+							$recipeNetId
 						);
 					}catch(\InvalidArgumentException|ItemTypeSerializeException) {
 						continue;
@@ -120,7 +128,7 @@ final class CraftingDataCache{
 						}
 						$recipesWithTypeIds[] = new ProtocolShapedRecipe(
 							CraftingDataPacket::ENTRY_SHAPED,
-							Binary::writeInt($index),
+							BE::packUnsignedInt($recipeNetId), //TODO: this should probably be changed to something human-readable
 							$inputs,
 							array_map($converter->coreItemStackToNet(...), $r->getResults()),
 							$nullUUID,
@@ -128,7 +136,7 @@ final class CraftingDataCache{
 							50,
 							true,
 							$noUnlockingRequirement,
-							$index
+							$recipeNetId,
 						);
 					}catch(\InvalidArgumentException|ItemTypeSerializeException) {
 						continue;
