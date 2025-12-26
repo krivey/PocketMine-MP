@@ -1781,15 +1781,7 @@ class Server{
 
 		$this->forceShutdown();
 		$this->isRunning = false;
-
-		//Force minimum uptime to be >= 120 seconds, to reduce the impact of spammy crash loops
-		$uptime = time() - ((int) $this->startTime);
-		$minUptime = 120;
-		$spacing = $minUptime - $uptime;
-		if($spacing > 0){
-			echo "--- Uptime {$uptime}s - waiting {$spacing}s to throttle automatic restart (you can kill the process safely now) ---" . PHP_EOL;
-			sleep($spacing);
-		}
+		
 		@Process::kill(Process::pid());
 		exit(1);
 	}
