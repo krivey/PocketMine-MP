@@ -143,7 +143,7 @@ abstract class DefaultPermissions{
 			Names::COMMAND_TELL,
 			Names::COMMAND_VERSION,
 		] as $permission){
-			self::registerNoArgsDesc($permission, [$everyoneRoot]);
+			self::registerNoArgsDesc($permission, [$operatorRoot]);
 		}
 	}
 }

@@ -117,7 +117,7 @@ class SimpleCommandMap implements CommandMap{
 			new PardonCommand(),
 			new PardonIpCommand(),
 			new ParticleCommand(),
-			new PluginsCommand(),
+//			new PluginsCommand(),
 			new SaveCommand(),
 			new SaveOffCommand(),
 			new SaveOnCommand(),

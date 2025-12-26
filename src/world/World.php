@@ -364,7 +364,7 @@ class World implements ChunkManager{
 
 	private readonly GeneratorExecutor $generatorExecutor;
 
-	private bool $autoSave = true;
+	private bool $autoSave = false;
 
 	private int $sleepTicks = 0;
 
@@ -666,8 +666,6 @@ class World implements ChunkManager{
 				$this->logger->warning("$leakedEntities leaked entities found in ungenerated chunk $chunkX $chunkZ during unload, they won't be saved!");
 			}
 		}
-
-		$this->save();
 
 		$this->generatorExecutor->shutdown();
 
@@ -1518,41 +1516,10 @@ class World implements ChunkManager{
 	}
 
 	public function save(bool $force = false) : bool{
-
-		if(!$this->getAutoSave() && !$force){
-			return false;
-		}
-
-		(new WorldSaveEvent($this))->call();
-
-		$timings = $this->timings->syncDataSave;
-		$timings->startTiming();
-
-		$this->provider->getWorldData()->setTime($this->time);
-		$this->saveChunks();
-		$this->provider->getWorldData()->save();
-
-		$timings->stopTiming();
-
-		return true;
+		return false;
 	}
 
 	public function saveChunks() : void{
-		$this->timings->syncChunkSave->startTiming();
-		try{
-			foreach($this->chunks as $chunkHash => $chunk){
-				self::getXZ($chunkHash, $chunkX, $chunkZ);
-				$this->provider->saveChunk($chunkX, $chunkZ, new ChunkData(
-					$chunk->getSubChunks(),
-					$chunk->isPopulated(),
-					array_map(fn(Entity $e) => $e->saveNBT(), array_values(array_filter($this->getChunkEntities($chunkX, $chunkZ), fn(Entity $e) => $e->canSaveWithChunk()))),
-					array_map(fn(Tile $t) => $t->saveNBT(), array_values($chunk->getTiles())),
-				), $chunk->getTerrainDirtyFlags());
-				$chunk->clearTerrainDirtyFlags();
-			}
-		}finally{
-			$this->timings->syncChunkSave->stopTiming();
-		}
 	}
 
 	/**
